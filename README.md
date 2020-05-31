@@ -12,57 +12,25 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.<br />
 You will also see any lint errors in the console.
 
-### `yarn test`
+## Comparison between the various approaches:
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### <a href="https://github.com/jobsonita/test-react-materialui-unform-integration/commit/824ed742260dfd5c52a90f56ef4fc6b9e44a48a9">Controlled inputs</a>:
+<img src="./docs/mat-ui unform - 1 - controlled.PNG" width="600px" />
 
-### `yarn build`
+### <a href="https://github.com/jobsonita/test-react-materialui-unform-integration/commit/acdea4f9545389666abcaab101fe0293f027d75f">Controlled inputs, merged states</a>:
+<img src="./docs/mat-ui unform - 2 - controlled, but in group.PNG" width="600px" />
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### <a href="https://github.com/jobsonita/test-react-materialui-unform-integration/commit/46de2926d3e36e56686af4b20b93312057073145">Semi uncontrolled inputs</a>:
+<img src="./docs/mat-ui unform - 3 - semi uncontrolled.PNG" width="600px" />
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+### <a href="https://github.com/jobsonita/test-react-materialui-unform-integration/commit/028de9570eb0dd2b8ede8596b919b134e6c5676c">Uncontrolled inputs (through useRef)</a>:
+<img src="./docs/mat-ui unform - 4 - uncontrolled.PNG" width="600px" />
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### <a href="https://github.com/jobsonita/test-react-materialui-unform-integration/commit/51aa06f47ac1a0c8d137a6c0a3a211aacbffe991">Uncontrolled component (through useImperativeRef)</a> / <a href="https://github.com/jobsonita/test-react-materialui-unform-integration/commit/b8746611e7015a80d3cfb3752dfac6328a5aed45">Uncontrolled component (merged states)</a>
+<img src="./docs/mat-ui unform - 5 - uncontrolled component.PNG" width="600px" />
 
-### `yarn eject`
+### <a href="https://github.com/jobsonita/test-react-materialui-unform-integration/commit/4a552343d3723abd90b867d4a3e1b910fdb7cd8e">Unform component</a>:
+<img src="./docs/mat-ui unform - 6 - unform component.PNG" width="600px" />
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+### <a href="https://github.com/jobsonita/test-react-materialui-unform-integration/commit/4075e7c197d1d7b9c4729ab9248b683468f2a1b1">Unform component (hybrid)</a>:
+<img src="./docs/mat-ui unform - 7 - unform component hybrid.PNG" width="600px" />
