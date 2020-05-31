@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 
 import {
   Avatar,
@@ -75,54 +75,47 @@ const Page = () => {
   counter += 1
   console.log('passes: ', counter)
 
-  const emailRef = useRef()
-  const passwordRef = useRef()
-  const passwordConfirmRef = useRef()
+  const [refs] = useState({
+    email: useRef(),
+    password: useRef(),
+    passwordConfirm: useRef(),
+  })
 
   const classes = useStyles()
 
-  const handleSubmit = useCallback(async (e) => {
-    e.preventDefault()
+  const handleSubmit = useCallback(
+    async (e) => {
+      e.preventDefault()
 
-    const formData = {
-      email: emailRef.current.getValue(),
-      password: passwordRef.current.getValue(),
-      passwordConfirm: passwordConfirmRef.current.getValue(),
-    }
+      const formData = {
+        email: refs.email.current.getValue(),
+        password: refs.password.current.getValue(),
+        passwordConfirm: refs.passwordConfirm.current.getValue(),
+      }
 
-    emailRef.current.setError('')
-    passwordRef.current.setError('')
-    passwordConfirmRef.current.setError('')
+      refs.email.current.setError('')
+      refs.password.current.setError('')
+      refs.passwordConfirm.current.setError('')
 
-    try {
-      await validation.validate(formData, { abortEarly: false })
-      console.log('submitted: ', formData)
-    } catch (error) {
-      error.inner.forEach((err) => {
-        switch (err.path) {
-          case 'email':
-            emailRef.current.setError(err.message)
-            break
-          case 'password':
-            passwordRef.current.setError(err.message)
-            break
-          case 'passwordConfirm':
-            passwordConfirmRef.current.setError(err.message)
-            break
-          default:
-            console.log(err.message)
-        }
-      })
-    }
-  }, [])
+      try {
+        await validation.validate(formData, { abortEarly: false })
+        console.log('submitted: ', formData)
+      } catch (error) {
+        error.inner.forEach((err) => {
+          refs[err.path].current.setError(err.message)
+        })
+      }
+    },
+    [refs]
+  )
 
   const handlePasswordChange = useCallback(() => {
-    passwordConfirmRef.current.setError('')
-  }, [])
+    refs.passwordConfirm.current.setError('')
+  }, [refs])
 
   const handlePasswordConfirmChange = useCallback(() => {
-    passwordRef.current.setError('')
-  }, [])
+    refs.password.current.setError('')
+  }, [refs])
 
   return (
     <Container className={classes.page}>
@@ -147,7 +140,7 @@ const Page = () => {
                 label="Email Address *"
                 labelWidth={102}
                 autoComplete="email"
-                ref={emailRef}
+                ref={refs.email}
               />
               <TextField
                 required
@@ -156,7 +149,7 @@ const Page = () => {
                 label="Password *"
                 labelWidth={70}
                 autoComplete="new-password"
-                ref={passwordRef}
+                ref={refs.password}
                 onChange={handlePasswordChange}
               />
               <TextField
@@ -166,7 +159,7 @@ const Page = () => {
                 label="Confirm Password *"
                 labelWidth={130}
                 autoComplete="new-password"
-                ref={passwordConfirmRef}
+                ref={refs.passwordConfirm}
                 onChange={handlePasswordConfirmChange}
               />
               <Button
