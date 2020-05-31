@@ -29,8 +29,5 @@ You will also see any lint errors in the console.
 ### <a href="https://github.com/jobsonita/test-react-materialui-unform-integration/commit/51aa06f47ac1a0c8d137a6c0a3a211aacbffe991">Uncontrolled component (through useImperativeRef)</a> / <a href="https://github.com/jobsonita/test-react-materialui-unform-integration/commit/b8746611e7015a80d3cfb3752dfac6328a5aed45">Uncontrolled component (merged states)</a>
 <img src="./docs/mat-ui unform - 5 - uncontrolled component.PNG" width="600px" />
 
-### <a href="https://github.com/jobsonita/test-react-materialui-unform-integration/commit/4a552343d3723abd90b867d4a3e1b910fdb7cd8e">Unform component</a>:
-<img src="./docs/mat-ui unform - 6 - unform component.PNG" width="600px" />
-
-### <a href="https://github.com/jobsonita/test-react-materialui-unform-integration/commit/4075e7c197d1d7b9c4729ab9248b683468f2a1b1">Unform component (hybrid)</a>:
+### <a href="https://github.com/jobsonita/test-react-materialui-unform-integration/commit/4a552343d3723abd90b867d4a3e1b910fdb7cd8e">Unform component</a> / <a href="https://github.com/jobsonita/test-react-materialui-unform-integration/commit/4075e7c197d1d7b9c4729ab9248b683468f2a1b1">Unform component (hybrid)</a>:
 <img src="./docs/mat-ui unform - 7 - unform component hybrid.PNG" width="600px" />
