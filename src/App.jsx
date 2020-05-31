@@ -1,11 +1,16 @@
 import React from 'react'
 
-function App() {
-  return (
-    <div className="App">
-      <h1>Hello World</h1>
-    </div>
-  )
-}
+import { AppProvider } from './context'
+
+import Header from './layout/Header'
+
+import Page from './pages/Page'
+
+const App = () => (
+  <AppProvider>
+    <Header />
+    <Page />
+  </AppProvider>
+)
 
 export default App
