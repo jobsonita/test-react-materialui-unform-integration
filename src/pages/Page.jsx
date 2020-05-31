@@ -1,9 +1,17 @@
 import React from 'react'
 
-import { Avatar, Container, Grid, Paper, Typography } from '@material-ui/core'
+import {
+  Avatar,
+  Button,
+  Container,
+  Grid,
+  Paper,
+  TextField,
+  Typography,
+} from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
-import PageIcon from '@material-ui/icons/FindInPageOutlined'
+import PageIcon from '@material-ui/icons/Person'
 
 const useStyles = makeStyles((theme) => ({
   page: {
@@ -13,7 +21,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   paper: {
-    minHeight: theme.spacing(64),
     marginTop: theme.spacing(3),
     marginBottom: theme.spacing(3),
   },
@@ -22,8 +29,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
 
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
+    padding: theme.spacing(2),
   },
   avatar: {
     backgroundColor: theme.palette.text.primary,
@@ -33,6 +39,20 @@ const useStyles = makeStyles((theme) => ({
   icon: {
     width: theme.spacing(6),
     height: theme.spacing(6),
+  },
+  formWrapper: {
+    width: '100%',
+
+    [theme.breakpoints.up('sm')]: {
+      width: 500,
+    },
+  },
+  form: {
+    textAlign: 'center',
+  },
+  submit: {
+    width: theme.spacing(20),
+    marginTop: theme.spacing(2),
   },
 }))
 
@@ -50,13 +70,50 @@ const Page = () => {
           </Grid>
           <Grid item>
             <Typography component="h1" variant="h5">
-              Page
+              Sign Up
             </Typography>
           </Grid>
-          <Grid item>
-            <Typography component="p" variant="body1" color="textSecondary">
-              Page content
-            </Typography>
+          <Grid item className={classes.formWrapper}>
+            <form noValidate className={classes.form}>
+              <TextField
+                required
+                name="email"
+                type="email"
+                label="Email Address"
+                autoComplete="email"
+                fullWidth
+                variant="outlined"
+                margin="dense"
+              />
+              <TextField
+                required
+                name="password"
+                type="password"
+                label="Password"
+                autoComplete="new-password"
+                fullWidth
+                variant="outlined"
+                margin="dense"
+              />
+              <TextField
+                required
+                name="password-confirmation"
+                type="password"
+                label="Confirm Password"
+                autoComplete="new-password"
+                fullWidth
+                variant="outlined"
+                margin="dense"
+              />
+              <Button
+                type="submit"
+                color="primary"
+                variant="contained"
+                className={classes.submit}
+              >
+                Sign Up
+              </Button>
+            </form>
           </Grid>
         </Grid>
       </Paper>
