@@ -1,12 +1,15 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useRef } from 'react'
 
 import {
   Avatar,
   Button,
   Container,
+  FormControl,
+  FormHelperText,
   Grid,
+  InputLabel,
+  OutlinedInput,
   Paper,
-  TextField,
   Typography,
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
@@ -74,11 +77,17 @@ const Page = () => {
   counter += 1
   console.log('passes: ', counter)
 
-  const [errors, setErrors] = useState({
-    email: '',
-    password: '',
-    passwordConfirm: '',
-  })
+  const emailFieldRef = useRef()
+  const emailInputRef = useRef()
+  const emailErrorRef = useRef()
+
+  const passwordFieldRef = useRef()
+  const passwordInputRef = useRef()
+  const passwordErrorRef = useRef()
+
+  const passwordConfirmFieldRef = useRef()
+  const passwordConfirmInputRef = useRef()
+  const passwordConfirmErrorRef = useRef()
 
   const classes = useStyles()
 
@@ -86,39 +95,82 @@ const Page = () => {
     e.preventDefault()
 
     const formData = {
-      email: e.target.email.value,
-      password: e.target.password.value,
-      passwordConfirm: e.target['password-confirmation'].value,
+      email: emailInputRef.current.value,
+      password: passwordInputRef.current.value,
+      passwordConfirm: passwordConfirmInputRef.current.value,
     }
 
-    setErrors({
-      email: '',
-      password: '',
-      passwordConfirm: '',
-    })
+    if (emailErrorRef.current.innerHTML) {
+      emailFieldRef.current.classList.remove('Mui-error')
+      emailErrorRef.current.innerHTML = ''
+    }
+    if (passwordErrorRef.current.innerHTML) {
+      passwordFieldRef.current.classList.remove('Mui-error')
+      passwordErrorRef.current.innerHTML = ''
+    }
+    if (passwordConfirmErrorRef.current.innerHTML) {
+      passwordConfirmFieldRef.current.classList.remove('Mui-error')
+      passwordConfirmErrorRef.current.innerHTML = ''
+    }
 
     try {
       await validation.validate(formData, { abortEarly: false })
       console.log('submitted: ', formData)
     } catch (error) {
-      const errors = {}
       error.inner.forEach((err) => {
-        errors[err.path] = err.message
+        switch (err.path) {
+          case 'email':
+            if (!emailErrorRef.current.innerHTML) {
+              emailFieldRef.current.classList.add('Mui-error')
+            }
+            emailErrorRef.current.innerHTML = err.message
+            break
+          case 'password':
+            if (!passwordErrorRef.current.innerHTML) {
+              passwordFieldRef.current.classList.add('Mui-error')
+            }
+            passwordErrorRef.current.innerHTML = err.message
+            break
+          case 'passwordConfirm':
+            if (!passwordConfirmErrorRef.current.innerHTML) {
+              passwordConfirmFieldRef.current.classList.add('Mui-error')
+            }
+            passwordConfirmErrorRef.current.innerHTML = err.message
+            break
+          default:
+            console.log(err.message)
+        }
       })
-      setErrors(errors)
     }
   }, [])
 
-  const handleEmailChange = useCallback((e) => {
-    setErrors((errors) => ({ ...errors, email: '' }))
+  const handleEmailChange = useCallback(() => {
+    if (emailErrorRef.current.innerHTML) {
+      emailFieldRef.current.classList.remove('Mui-error')
+      emailErrorRef.current.innerHTML = ''
+    }
   }, [])
 
-  const handlePasswordChange = useCallback((e) => {
-    setErrors((errors) => ({ ...errors, password: '', passwordConfirm: '' }))
+  const handlePasswordChange = useCallback(() => {
+    if (passwordErrorRef.current.innerHTML) {
+      passwordFieldRef.current.classList.remove('Mui-error')
+      passwordErrorRef.current.innerHTML = ''
+    }
+    if (passwordConfirmErrorRef.current.innerHTML) {
+      passwordConfirmFieldRef.current.classList.remove('Mui-error')
+      passwordConfirmErrorRef.current.innerHTML = ''
+    }
   }, [])
 
-  const handlePasswordConfirmChange = useCallback((e) => {
-    setErrors((errors) => ({ ...errors, password: '', passwordConfirm: '' }))
+  const handlePasswordConfirmChange = useCallback(() => {
+    if (passwordErrorRef.current.innerHTML) {
+      passwordFieldRef.current.classList.remove('Mui-error')
+      passwordErrorRef.current.innerHTML = ''
+    }
+    if (passwordConfirmErrorRef.current.innerHTML) {
+      passwordConfirmFieldRef.current.classList.remove('Mui-error')
+      passwordConfirmErrorRef.current.innerHTML = ''
+    }
   }, [])
 
   return (
@@ -137,45 +189,50 @@ const Page = () => {
           </Grid>
           <Grid item className={classes.formWrapper}>
             <form noValidate onSubmit={handleSubmit} className={classes.form}>
-              <TextField
-                required
-                name="email"
-                type="email"
-                label="Email Address"
-                autoComplete="email"
-                onChange={handleEmailChange}
-                error={!!errors.email}
-                helperText={errors.email}
-                fullWidth
-                variant="outlined"
-                margin="dense"
-              />
-              <TextField
-                required
-                name="password"
-                type="password"
-                label="Password"
-                autoComplete="new-password"
-                onChange={handlePasswordChange}
-                error={!!errors.password}
-                helperText={errors.password}
-                fullWidth
-                variant="outlined"
-                margin="dense"
-              />
-              <TextField
-                required
-                name="password-confirmation"
-                type="password"
-                label="Confirm Password"
-                autoComplete="new-password"
-                onChange={handlePasswordConfirmChange}
-                error={!!errors.passwordConfirm}
-                helperText={errors.passwordConfirm}
-                fullWidth
-                variant="outlined"
-                margin="dense"
-              />
+              <FormControl fullWidth margin="dense" variant="outlined">
+                <InputLabel htmlFor="email">Email Address</InputLabel>
+                <OutlinedInput
+                  required
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  onChange={handleEmailChange}
+                  ref={emailFieldRef}
+                  inputRef={emailInputRef}
+                />
+                <FormHelperText ref={emailErrorRef} error />
+              </FormControl>
+              <FormControl fullWidth margin="dense" variant="outlined">
+                <InputLabel htmlFor="password">Password</InputLabel>
+                <OutlinedInput
+                  required
+                  id="password"
+                  name="password"
+                  type="password"
+                  autoComplete="new-password"
+                  onChange={handlePasswordChange}
+                  ref={passwordFieldRef}
+                  inputRef={passwordInputRef}
+                />
+                <FormHelperText ref={passwordErrorRef} error />
+              </FormControl>
+              <FormControl fullWidth margin="dense" variant="outlined">
+                <InputLabel htmlFor="password-confirmation">
+                  Confirm Password
+                </InputLabel>
+                <OutlinedInput
+                  required
+                  id="password-confirmation"
+                  name="password-confirmation"
+                  type="password"
+                  autoComplete="new-password"
+                  onChange={handlePasswordConfirmChange}
+                  ref={passwordConfirmFieldRef}
+                  inputRef={passwordConfirmInputRef}
+                />
+                <FormHelperText ref={passwordConfirmErrorRef} error />
+              </FormControl>
               <Button
                 type="submit"
                 color="primary"
