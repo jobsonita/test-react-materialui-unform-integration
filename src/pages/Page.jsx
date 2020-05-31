@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 
 import {
   Avatar,
@@ -56,8 +56,32 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
+let counter = 0
+
 const Page = () => {
+  counter += 1
+  console.log('passes: ', counter)
+
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [passwordConfirm, setPasswordConfirm] = useState('')
+
   const classes = useStyles()
+
+  const handleSubmit = useCallback(
+    (e) => {
+      e.preventDefault()
+
+      const formData = {
+        email,
+        password,
+        passwordConfirm,
+      }
+
+      console.log('submitted: ', formData)
+    },
+    [email, password, passwordConfirm]
+  )
 
   return (
     <Container className={classes.page}>
@@ -74,13 +98,15 @@ const Page = () => {
             </Typography>
           </Grid>
           <Grid item className={classes.formWrapper}>
-            <form noValidate className={classes.form}>
+            <form noValidate onSubmit={handleSubmit} className={classes.form}>
               <TextField
                 required
                 name="email"
                 type="email"
                 label="Email Address"
                 autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 fullWidth
                 variant="outlined"
                 margin="dense"
@@ -91,6 +117,8 @@ const Page = () => {
                 type="password"
                 label="Password"
                 autoComplete="new-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 fullWidth
                 variant="outlined"
                 margin="dense"
@@ -101,6 +129,8 @@ const Page = () => {
                 type="password"
                 label="Confirm Password"
                 autoComplete="new-password"
+                value={passwordConfirm}
+                onChange={(e) => setPasswordConfirm(e.target.value)}
                 fullWidth
                 variant="outlined"
                 margin="dense"
