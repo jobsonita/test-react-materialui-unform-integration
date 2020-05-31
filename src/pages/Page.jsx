@@ -74,12 +74,6 @@ const Page = () => {
   counter += 1
   console.log('passes: ', counter)
 
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    passwordConfirm: '',
-  })
-
   const [errors, setErrors] = useState({
     email: '',
     password: '',
@@ -88,46 +82,43 @@ const Page = () => {
 
   const classes = useStyles()
 
-  const handleSubmit = useCallback(
-    async (e) => {
-      e.preventDefault()
+  const handleSubmit = useCallback(async (e) => {
+    e.preventDefault()
 
-      setErrors({
-        email: '',
-        password: '',
-        passwordConfirm: '',
+    const formData = {
+      email: e.target.email.value,
+      password: e.target.password.value,
+      passwordConfirm: e.target['password-confirmation'].value,
+    }
+
+    setErrors({
+      email: '',
+      password: '',
+      passwordConfirm: '',
+    })
+
+    try {
+      await validation.validate(formData, { abortEarly: false })
+      console.log('submitted: ', formData)
+    } catch (error) {
+      const errors = {}
+      error.inner.forEach((err) => {
+        errors[err.path] = err.message
       })
-
-      try {
-        await validation.validate(formData, { abortEarly: false })
-        console.log('submitted: ', formData)
-      } catch (error) {
-        const errors = {}
-        error.inner.forEach((err) => {
-          errors[err.path] = err.message
-        })
-        setErrors(errors)
-      }
-    },
-    [formData]
-  )
+      setErrors(errors)
+    }
+  }, [])
 
   const handleEmailChange = useCallback((e) => {
-    const email = e.target.value
     setErrors((errors) => ({ ...errors, email: '' }))
-    setFormData((formData) => ({ ...formData, email }))
   }, [])
 
   const handlePasswordChange = useCallback((e) => {
-    const password = e.target.value
     setErrors((errors) => ({ ...errors, password: '', passwordConfirm: '' }))
-    setFormData((formData) => ({ ...formData, password }))
   }, [])
 
   const handlePasswordConfirmChange = useCallback((e) => {
-    const passwordConfirm = e.target.value
     setErrors((errors) => ({ ...errors, password: '', passwordConfirm: '' }))
-    setFormData((formData) => ({ ...formData, passwordConfirm }))
   }, [])
 
   return (
@@ -152,7 +143,6 @@ const Page = () => {
                 type="email"
                 label="Email Address"
                 autoComplete="email"
-                value={formData.email}
                 onChange={handleEmailChange}
                 error={!!errors.email}
                 helperText={errors.email}
@@ -166,7 +156,6 @@ const Page = () => {
                 type="password"
                 label="Password"
                 autoComplete="new-password"
-                value={formData.password}
                 onChange={handlePasswordChange}
                 error={!!errors.password}
                 helperText={errors.password}
@@ -180,7 +169,6 @@ const Page = () => {
                 type="password"
                 label="Confirm Password"
                 autoComplete="new-password"
-                value={formData.passwordConfirm}
                 onChange={handlePasswordConfirmChange}
                 error={!!errors.passwordConfirm}
                 helperText={errors.passwordConfirm}
