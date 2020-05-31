@@ -1,10 +1,4 @@
-import React, {
-  forwardRef,
-  useCallback,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 
 import {
@@ -14,77 +8,48 @@ import {
   OutlinedInput,
 } from '@material-ui/core'
 
+import { useField } from '@unform/core'
+
 import { uniqueId } from 'lodash/util'
 
 let counter = 0
 
-const TextField = forwardRef(function TextField(
-  { label, onChange, ...rest },
-  ref
-) {
+const TextField = ({ name, label, ...rest }) => {
   counter += 1
   console.log('textfield rerenders', counter)
 
   const [id] = useState(uniqueId('textfield-'))
 
-  const fieldRef = useRef()
   const inputRef = useRef()
-  const errorRef = useRef()
 
-  const getValue = useCallback(() => {
-    return inputRef.current.value
-  }, [])
+  const { fieldName, defaultValue, registerField, error } = useField(name)
 
-  const setError = useCallback(
-    (error) => {
-      if (error) {
-        if (!errorRef.current.innerHTML) {
-          fieldRef.current.classList.add('Mui-error')
-        }
-        errorRef.current.innerHTML = error
-      } else {
-        if (errorRef.current.innerHTML) {
-          fieldRef.current.classList.remove('Mui-error')
-          errorRef.current.innerHTML = ''
-        }
-      }
-    },
-    [errorRef, fieldRef]
-  )
-
-  useImperativeHandle(ref, () => ({
-    getValue,
-    setError,
-  }))
-
-  const handleChange = useCallback(
-    (e) => {
-      setError('')
-      if (onChange) {
-        onChange(e)
-      }
-    },
-    [onChange, setError]
-  )
+  useEffect(() => {
+    registerField({
+      name: fieldName,
+      ref: inputRef.current,
+      path: 'value',
+    })
+  }, [fieldName, registerField])
 
   return (
-    <FormControl fullWidth margin="dense" variant="outlined">
+    <FormControl error={!!error} fullWidth margin="dense" variant="outlined">
       <InputLabel htmlFor={id}>{label}</InputLabel>
       <OutlinedInput
         id={id}
-        ref={fieldRef}
+        name={name}
+        defaultValue={defaultValue}
         inputRef={inputRef}
-        onChange={handleChange}
         {...rest}
       />
-      <FormHelperText ref={errorRef} error />
+      {error && <FormHelperText error>{error}</FormHelperText>}
     </FormControl>
   )
-})
+}
 
 TextField.propTypes = {
+  name: PropTypes.string.isRequired,
   label: PropTypes.string,
-  onChange: PropTypes.func,
 }
 
 export default TextField

@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useRef } from 'react'
 
 import {
   Avatar,
@@ -11,6 +11,8 @@ import {
 import { makeStyles } from '@material-ui/core/styles'
 
 import PageIcon from '@material-ui/icons/Person'
+
+import { Form } from '@unform/web'
 
 import * as Yup from 'yup'
 
@@ -64,7 +66,7 @@ const validation = Yup.object({
     .email('Email must be a valid email')
     .required('Email is required'),
   password: Yup.string().required('Password is required'),
-  passwordConfirm: Yup.string()
+  password_confirmation: Yup.string()
     .oneOf([Yup.ref('password'), null], 'Passwords must match')
     .required('Password confirmation is required'),
 })
@@ -75,47 +77,26 @@ const Page = () => {
   counter += 1
   console.log('passes: ', counter)
 
-  const [refs] = useState({
-    email: useRef(),
-    password: useRef(),
-    passwordConfirm: useRef(),
-  })
+  const formRef = useRef()
 
   const classes = useStyles()
 
-  const handleSubmit = useCallback(
-    async (e) => {
-      e.preventDefault()
+  const handleSubmit = useCallback(async (formData) => {
+    formRef.current.setErrors({})
 
-      const formData = {
-        email: refs.email.current.getValue(),
-        password: refs.password.current.getValue(),
-        passwordConfirm: refs.passwordConfirm.current.getValue(),
-      }
+    try {
+      await validation.validate(formData, { abortEarly: false })
+      console.log('submitted: ', formData)
+    } catch (error) {
+      const errors = {}
 
-      refs.email.current.setError('')
-      refs.password.current.setError('')
-      refs.passwordConfirm.current.setError('')
+      error.inner.forEach((err) => {
+        errors[err.path] = err.message
+      })
 
-      try {
-        await validation.validate(formData, { abortEarly: false })
-        console.log('submitted: ', formData)
-      } catch (error) {
-        error.inner.forEach((err) => {
-          refs[err.path].current.setError(err.message)
-        })
-      }
-    },
-    [refs]
-  )
-
-  const handlePasswordChange = useCallback(() => {
-    refs.passwordConfirm.current.setError('')
-  }, [refs])
-
-  const handlePasswordConfirmChange = useCallback(() => {
-    refs.password.current.setError('')
-  }, [refs])
+      formRef.current.setErrors(errors)
+    }
+  }, [])
 
   return (
     <Container className={classes.page}>
@@ -132,7 +113,12 @@ const Page = () => {
             </Typography>
           </Grid>
           <Grid item className={classes.formWrapper}>
-            <form noValidate onSubmit={handleSubmit} className={classes.form}>
+            <Form
+              noValidate
+              ref={formRef}
+              onSubmit={handleSubmit}
+              className={classes.form}
+            >
               <TextField
                 required
                 name="email"
@@ -140,7 +126,6 @@ const Page = () => {
                 label="Email Address *"
                 labelWidth={102}
                 autoComplete="email"
-                ref={refs.email}
               />
               <TextField
                 required
@@ -149,18 +134,14 @@ const Page = () => {
                 label="Password *"
                 labelWidth={70}
                 autoComplete="new-password"
-                ref={refs.password}
-                onChange={handlePasswordChange}
               />
               <TextField
                 required
-                name="password-confirmation"
+                name="password_confirmation"
                 type="password"
                 label="Confirm Password *"
                 labelWidth={130}
                 autoComplete="new-password"
-                ref={refs.passwordConfirm}
-                onChange={handlePasswordConfirmChange}
               />
               <Button
                 type="submit"
@@ -170,7 +151,7 @@ const Page = () => {
               >
                 Sign Up
               </Button>
-            </form>
+            </Form>
           </Grid>
         </Grid>
       </Paper>
