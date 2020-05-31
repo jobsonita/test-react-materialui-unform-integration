@@ -74,13 +74,17 @@ const Page = () => {
   counter += 1
   console.log('passes: ', counter)
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [passwordConfirm, setPasswordConfirm] = useState('')
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    passwordConfirm: '',
+  })
 
-  const [emailError, setEmailError] = useState('')
-  const [passwordError, setPasswordError] = useState('')
-  const [passwordConfirmError, setPasswordConfirmError] = useState('')
+  const [errors, setErrors] = useState({
+    email: '',
+    password: '',
+    passwordConfirm: '',
+  })
 
   const classes = useStyles()
 
@@ -88,55 +92,42 @@ const Page = () => {
     async (e) => {
       e.preventDefault()
 
-      setEmailError('')
-      setPasswordError('')
-      setPasswordConfirmError('')
-
-      const formData = {
-        email,
-        password,
-        passwordConfirm,
-      }
+      setErrors({
+        email: '',
+        password: '',
+        passwordConfirm: '',
+      })
 
       try {
         await validation.validate(formData, { abortEarly: false })
         console.log('submitted: ', formData)
       } catch (error) {
+        const errors = {}
         error.inner.forEach((err) => {
-          switch (err.path) {
-            case 'email':
-              setEmailError(err.message)
-              break
-            case 'password':
-              setPasswordError(err.message)
-              break
-            case 'passwordConfirm':
-              setPasswordConfirmError(err.message)
-              break
-            default:
-              console.log(err.message)
-          }
+          errors[err.path] = err.message
         })
+        setErrors(errors)
       }
     },
-    [email, password, passwordConfirm]
+    [formData]
   )
 
   const handleEmailChange = useCallback((e) => {
-    setEmailError('')
-    setEmail(e.target.value)
+    const email = e.target.value
+    setErrors((errors) => ({ ...errors, email: '' }))
+    setFormData((formData) => ({ ...formData, email }))
   }, [])
 
   const handlePasswordChange = useCallback((e) => {
-    setPasswordError('')
-    setPasswordConfirmError('')
-    setPassword(e.target.value)
+    const password = e.target.value
+    setErrors((errors) => ({ ...errors, password: '', passwordConfirm: '' }))
+    setFormData((formData) => ({ ...formData, password }))
   }, [])
 
   const handlePasswordConfirmChange = useCallback((e) => {
-    setPasswordError('')
-    setPasswordConfirmError('')
-    setPasswordConfirm(e.target.value)
+    const passwordConfirm = e.target.value
+    setErrors((errors) => ({ ...errors, password: '', passwordConfirm: '' }))
+    setFormData((formData) => ({ ...formData, passwordConfirm }))
   }, [])
 
   return (
@@ -161,10 +152,10 @@ const Page = () => {
                 type="email"
                 label="Email Address"
                 autoComplete="email"
-                value={email}
+                value={formData.email}
                 onChange={handleEmailChange}
-                error={!!emailError}
-                helperText={emailError}
+                error={!!errors.email}
+                helperText={errors.email}
                 fullWidth
                 variant="outlined"
                 margin="dense"
@@ -175,10 +166,10 @@ const Page = () => {
                 type="password"
                 label="Password"
                 autoComplete="new-password"
-                value={password}
+                value={formData.password}
                 onChange={handlePasswordChange}
-                error={!!passwordError}
-                helperText={passwordError}
+                error={!!errors.password}
+                helperText={errors.password}
                 fullWidth
                 variant="outlined"
                 margin="dense"
@@ -189,10 +180,10 @@ const Page = () => {
                 type="password"
                 label="Confirm Password"
                 autoComplete="new-password"
-                value={passwordConfirm}
+                value={formData.passwordConfirm}
                 onChange={handlePasswordConfirmChange}
-                error={!!passwordConfirmError}
-                helperText={passwordConfirmError}
+                error={!!errors.passwordConfirm}
+                helperText={errors.passwordConfirm}
                 fullWidth
                 variant="outlined"
                 margin="dense"
